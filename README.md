@@ -3,6 +3,8 @@
 スマホ用4人打ちリーチ麻雀(**Mリーグルール専用**)と、Mリーグ公式戦の牌譜ビューア。
 Flutter製、Android / iOS 対応、**横画面専用**。
 
+<img src="docs/images/game-screen.png" alt="対戦画面(iPhone SE シミュレータ、東1局)" width="560">
+
 [Mリーグ](https://m-league.jp/)は 2018 年に始まった日本のプロ麻雀リーグ。
 本アプリの対戦ルールは [Mリーグの競技規定](https://m-league.jp/about/)に合わせ、牌譜ビューアは
 [konoui/m-league-game-db](https://github.com/konoui/m-league-game-db) が公開している公式戦の牌譜データを読みます。

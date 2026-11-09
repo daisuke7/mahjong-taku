@@ -43,6 +43,12 @@
   `.claude/skills/review-m-league-rules/`(こちらも非公開)にある。README の「Mリーグルール専用」を
   支える根拠はこの記録で、公開版では条番号と要旨での参照に留めている。
 
+## images/
+
+- `game-screen.png` — トップの README に載せている対戦画面のスクリーンショット(iPhone SE シミュレータ、2026-11-09)。
+  牌の絵柄は麻雀豆腐の素材(THIRD_PARTY_LICENSES.md)。アプリの使用画面の写り込みであり、素材ファイルの
+  再配布には当たらないため、事前許諾なしで掲載できると判断(2026-11-09 ユーザー判断)。
+
 ## 読む順番の提案
 
 1. development-policy.md で縛りを把握する
