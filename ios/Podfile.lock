@@ -1,0 +1,23 @@
+PODS:
+  - Flutter (1.0.0)
+  - nearby_service (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - nearby_service (from `.symlinks/plugins/nearby_service/darwin`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  nearby_service:
+    :path: ".symlinks/plugins/nearby_service/darwin"
+
+SPEC CHECKSUMS:
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  nearby_service: 89cfcb10c1b5a1a7f3807449b07ca1399134b66e
+
+PODFILE CHECKSUM: 3ba3a73b1b12adcf321a227a745625fe0888cc82
+
+COCOAPODS: 1.16.2

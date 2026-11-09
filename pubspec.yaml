@@ -1,0 +1,61 @@
+name: mahjong_taku
+description: "LAN対戦対応の4人打ちリーチ麻雀(横画面専用)"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  # mDNS/Bonjourによる同一LAN内の部屋発見(iOS/Android両対応)
+  bonsoir: ^7.1.4
+  # 共通Wi-Fiなしの近距離P2P(iOS同士=Multipeer / Android同士=Wi-Fi Direct)
+  nearby_service: ^0.2.1
+  # 対局中の画面スリープ防止
+  wakelock_plus: ^1.2.8
+  # 試合中断・復帰情報の永続化
+  shared_preferences: ^2.5.2
+  # 外部リンク(作者X・素材サイト)を開く
+  url_launcher: ^6.3.0
+  # Mリーグ牌譜DB(konoui/m-league-game-db)の読み込み
+  sqlite3: ^2.4.0
+  sqlite3_flutter_libs: ^0.5.24
+  # 牌譜DB(zip)の展開
+  archive: ^4.0.0
+  # 牌譜DBの保存先ディレクトリ
+  path_provider: ^2.1.0
+  bluetooth_low_energy: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # 時間経過を制御するテスト用(局終了確認の3秒待ちなど)
+  fake_async: ^1.3.1
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    # 牌画像: 麻雀豆腐(https://majandofu.com/mahjong-images)提供の素材
+    - assets/tiles/
+
+# アプリアイコン生成(assets/icon/ の 1024px 素材を置いてから
+# `fvm dart run flutter_launcher_icons` で iOS/Android の全サイズを生成)。
+# 素材は Muse(Meta AI)で作った「データ牌」セット(2026-11-09 差し替え):
+#   app_icon.png            合成済み(iOS と Android 8 未満のレガシー用)
+#   adaptive_foreground.png 前景(牌+データキューブ、透過)
+#   adaptive_background.png 背景(サイバー空間、全面)
+#   adaptive_monochrome.png Android 13+ のテーマアイコン用シルエット
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  remove_alpha_ios: true
+  adaptive_icon_foreground: "assets/icon/adaptive_foreground.png"
+  adaptive_icon_background: "assets/icon/adaptive_background.png"
+  adaptive_icon_monochrome: "assets/icon/adaptive_monochrome.png"
