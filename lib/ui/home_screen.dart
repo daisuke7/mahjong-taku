@@ -14,7 +14,6 @@ import 'yomi_quiz_screen.dart';
 /// アプリ内で使い回すプレイヤー設定(セッション中のみ保持)
 class PlayerPrefs {
   static String name = '';
-  static int rounds = 2; // 1=東風 2=半荘
 }
 
 class HomeScreen extends StatefulWidget {
@@ -158,7 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return name.isEmpty ? 'プレイヤー' : name;
   }
 
-  GameConfig get _config => GameConfig(rounds: PlayerPrefs.rounds);
+  // Mリーグルール専用なので半荘戦固定(GameConfig の既定)。東風戦の選択は置かない
+  // (2026-11-09 までは切り替えが有り、ルールレビューで「意図的な機能追加」と誤分類していた)
+  GameConfig get _config => const GameConfig();
 
   @override
   Widget build(BuildContext context) {
@@ -203,16 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           isDense: true,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    SegmentedButton<int>(
-                      segments: const [
-                        ButtonSegment(value: 1, label: Text('東風戦')),
-                        ButtonSegment(value: 2, label: Text('半荘戦')),
-                      ],
-                      selected: {PlayerPrefs.rounds},
-                      onSelectionChanged: (v) =>
-                          setState(() => PlayerPrefs.rounds = v.first),
                     ),
                     const SizedBox(height: 20),
                     Wrap(

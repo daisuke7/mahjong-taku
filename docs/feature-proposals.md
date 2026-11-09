@@ -471,3 +471,8 @@ README の事実確認(2026-11-09): 全記述をコードと突き合わせ、3 
 事実にするため、lib/test のコメントに残っていた公式規定の逐語引用 7 箇所(score.dart×2、hand.dart、table_widgets.dart、
 game_engine.dart、riichi_pot_split_test、chankan_furiten_test、river_sideways_test)を条番号+要旨に書き換えた。
 直接依存 11 パッケージのライセンスを pub キャッシュで確認(MIT または BSD-3-Clause)。
+
+### 追記(2026-11-09) GitHub 初回 push
+
+https://github.com/daisuke7/mahjong-taku に main を初回 push(253 ファイル、コミット 082be7c)。作成時は private、公開時に public へ。
+push 後の予定: 麻雀豆腐編集部へ牌画像の同梱(再配布)可否を問い合わせ、許諾が出れば assets/tiles/*.png を同梱に戻す。

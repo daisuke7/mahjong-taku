@@ -431,7 +431,7 @@ class _HostLobbyScreenState extends State<HostLobbyScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'ルール: ${widget.config.rounds == 1 ? '東風戦' : '半荘戦'} / Mリーグ準拠(赤あり・頭ハネ・トビなし)',
+                            'ルール: 半荘戦 / Mリーグ準拠(赤あり・頭ハネ・トビなし)',
                             style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 12,
