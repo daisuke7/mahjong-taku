@@ -1231,7 +1231,7 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Wi-Fiでつながる四人打ちリーチ麻雀(Mリーグルール)',
+              'Wi-Fi・近距離・Bluetooth でつながる四人打ちリーチ麻雀(Mリーグルール)',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),

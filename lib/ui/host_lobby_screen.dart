@@ -364,7 +364,8 @@ class _HostLobbyScreenState extends State<HostLobbyScreen> {
                                               '未合流の席はCPUが代打します(あとから合流も可)。'
                                         : '相手は「部屋に入る」から選ぶだけ。\n'
                                               '① 同じWi-Fi(またはテザリング)経由\n'
-                                              '② 近距離接続(Wi-Fi不要・iPhone同士/Android同士)',
+                                              '② 近距離接続(Wi-Fi不要・iPhone同士/Android同士)\n'
+                                              '③ BLE接続(Wi-Fi不要・iPhone/Android混合可)',
                                     style: const TextStyle(
                                       color: Colors.white70,
                                       fontSize: 12.5,

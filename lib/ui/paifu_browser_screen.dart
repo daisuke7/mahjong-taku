@@ -898,7 +898,7 @@ class _MyGamePickScreenState extends State<_MyGamePickScreen> {
       title: '自分の対局',
       emptyText: games == null
           ? '読み込み中…'
-          : 'まだ保存された対局がありません。\nソロやLAN対戦をホストとして打つと自動で貯まります。',
+          : 'まだ保存された対局がありません。\nソロや通信対戦をホストとして打つと自動で貯まります。',
       children: [
         for (final g in games ?? const <MyPaifuSummary>[])
           _PickTile(

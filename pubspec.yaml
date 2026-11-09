@@ -1,5 +1,5 @@
 name: mahjong_taku
-description: "LAN対戦対応の4人打ちリーチ麻雀(横画面専用)"
+description: "Mリーグルール専用の4人打ちリーチ麻雀(Wi-Fi・近距離・BLE で通信対戦)と Mリーグ牌譜ビューア(横画面専用)"
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -19,7 +19,7 @@ dependencies:
   wakelock_plus: ^1.2.8
   # 試合中断・復帰情報の永続化
   shared_preferences: ^2.5.2
-  # 外部リンク(作者X・素材サイト)を開く
+  # 外部リンク(素材サイト・公式サイト)を開く
   url_launcher: ^6.3.0
   # Mリーグ牌譜DB(konoui/m-league-game-db)の読み込み
   sqlite3: ^2.4.0

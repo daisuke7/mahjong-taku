@@ -495,7 +495,7 @@ class _JoinScreenState extends State<JoinScreen> {
                   child: !hasAny
                       ? Center(
                           child: Text(
-                            '同じWi-Fi内と近く(${nearbySupported ? '同じOS同士' : '非対応'})の部屋を探しています…\n'
+                            '同じWi-Fi内・近く(${nearbySupported ? '同じOS同士' : '非対応'})・BLE の部屋を探しています…\n'
                             '見つからないときは右のIP入力かテザリングを使ってください',
                             textAlign: TextAlign.center,
                             style: const TextStyle(color: Colors.white54),
