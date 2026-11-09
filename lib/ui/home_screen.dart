@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Wi-Fiでつながる四人打ちリーチ麻雀(Mリーグルール)',
+                      'Wi-Fi・近距離・Bluetooth でつながる四人打ちリーチ麻雀(Mリーグルール)',
                       style: TextStyle(color: Colors.white54),
                     ),
                     const SizedBox(height: 2),
@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         _menuButton(
                           icon: Icons.search,
                           label: '部屋に入る',
-                          subtitle: '同じWi-Fiの部屋を探す',
+                          subtitle: '近くの部屋を探す',
                           onTap: () {
                             Navigator.push(
                               context,
