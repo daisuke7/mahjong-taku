@@ -10,8 +10,6 @@
 /// ([schemaProblems])と `check-paifu-db-schema` スキルの検査がこれを使う。
 library;
 
-import 'package:sqlite3/sqlite3.dart';
-
 abstract final class DbSchema {
   // ---- テーブル名(改名されたもの)。コメントは旧名 ----
   static const agariYaku = 'agari_yaku'; // 旧 agari_yaku_event
@@ -138,28 +136,6 @@ abstract final class DbSchema {
       matrixDoraIndicator,
     ],
   };
-}
-
-/// 開いた DB に [DbSchema.required] のテーブル・列が揃っているか。
-/// 足りないものを 'table' または 'table.column' の形で返す(空なら読める)。
-List<String> schemaProblems(Database db) {
-  final problems = <String>[];
-  for (final e in DbSchema.required.entries) {
-    // table_info は生成列(agari_event.revenue_points 等)を返さないので table_xinfo を使う
-    // (2026-10-02 に正常な DB を「読めない形式」と誤判定した原因)
-    final cols = {
-      for (final r in db.select('PRAGMA table_xinfo(${e.key})'))
-        r['name'] as String,
-    };
-    if (cols.isEmpty) {
-      problems.add(e.key);
-      continue;
-    }
-    for (final c in e.value) {
-      if (!cols.contains(c)) problems.add('${e.key}.$c');
-    }
-  }
-  return problems;
 }
 
 /// 取り込もうとした DB がこのアプリの対応外(テーブル・列が足りない)

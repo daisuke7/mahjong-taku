@@ -9,6 +9,7 @@ import '../net/protocol.dart';
 import '../session/suspend.dart';
 import '../session/suspend_store.dart';
 import 'game_screen.dart';
+import 'widgets/resume_banner.dart';
 
 class HostLobbyScreen extends StatefulWidget {
   final String hostName;
@@ -164,41 +165,14 @@ class _HostLobbyScreenState extends State<HostLobbyScreen> {
   }
 
   /// 通常ロビーに出す「中断した対局があります」バナー
-  Widget _resumeBanner() {
-    final saved = _saved!;
-    return Card(
-      color: const Color(0xFF4E3D13),
-      margin: const EdgeInsets.only(bottom: 10),
-      child: ListTile(
-        dense: true,
-        leading: const Icon(
-          Icons.pause_circle_outline,
-          color: Color(0xFFFFE082),
-        ),
-        title: Text('中断した対局: ${saved.roomName}'),
-        subtitle: Text(
-          '${saved.savedAt.month}/${saved.savedAt.day} '
-          '${saved.savedAt.hour}:${saved.savedAt.minute.toString().padLeft(2, '0')} 中断'
-          '${saved.guestNames.isEmpty ? '' : ' / 合流待ち: ${saved.guestNames.join('、')}'}',
-          style: const TextStyle(fontSize: 11, color: Colors.white54),
-        ),
-        trailing: Wrap(
-          spacing: 4,
-          children: [
-            FilledButton(onPressed: _switchToResume, child: const Text('復帰する')),
-            IconButton(
-              tooltip: '復帰情報を破棄',
-              icon: const Icon(Icons.delete_outline, color: Colors.white38),
-              onPressed: () async {
-                await SuspendStore.clearHost();
-                if (mounted) setState(() => _saved = null);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _resumeBanner() => ResumeBanner(
+    saved: _saved!,
+    onResume: _switchToResume,
+    onDiscard: () async {
+      await SuspendStore.clearHost();
+      if (mounted) setState(() => _saved = null);
+    },
+  );
 
   @override
   Widget build(BuildContext context) {

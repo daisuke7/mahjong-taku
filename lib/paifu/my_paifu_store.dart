@@ -14,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../engine/paifu_record.dart';
 import 'own_paifu_format.dart';
+import '../features.dart';
 
 /// 一覧表示用の1試合の要約
 class MyPaifuSummary {
@@ -89,6 +90,7 @@ class MyPaifuStore implements PaifuRecorder {
   Future<void> flush() => _writes;
 
   void _enqueue(Future<void> Function() job) {
+    if (!Features.localFiles) return; // Web: 保存先が無いので記録しない
     _writes = _writes.then((_) => job()).catchError((_) {
       // 保存失敗(テスト環境の path_provider 不在など)は対局を止めない
     });
@@ -172,6 +174,7 @@ class MyPaifuStore implements PaifuRecorder {
 
   /// 保存済みの試合一覧(新しい順)。壊れたファイルは読み飛ばす。
   static Future<List<MyPaifuSummary>> listGames() async {
+    if (!Features.localFiles) return const [];
     final dir = await _dir();
     if (!await dir.exists()) return const [];
     final summaries = <MyPaifuSummary>[];
@@ -205,7 +208,8 @@ class MyPaifuStore implements PaifuRecorder {
   }
 
   /// 1試合の牌譜を読み込む(MyPaifuSource に渡す)。無ければ null。
-  static Future<Map<String, dynamic>?> loadGame(String id) => _load(id);
+  static Future<Map<String, dynamic>?> loadGame(String id) =>
+      Features.localFiles ? _load(id) : Future.value(null);
 
   static Future<void> deleteGame(String id) async {
     try {

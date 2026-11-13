@@ -1,7 +1,7 @@
 # 麻雀卓(mahjong_taku)
 
 スマホ用4人打ちリーチ麻雀(**Mリーグルール専用**)と、Mリーグ公式戦の牌譜ビューア。
-Flutter製、Android / iOS 対応、**横画面専用**。
+Flutter製、Android / iOS 対応、**横画面専用**。ブラウザ版(ひとりで打つ専用)もビルドできます(後述)。
 
 <img src="docs/images/game-screen.png" alt="対戦画面(iPhone SE シミュレータ、東1局)" width="560">
 
@@ -75,7 +75,7 @@ Flutter製、Android / iOS 対応、**横画面専用**。
 **対局・設定**
 - ルールは半荘戦固定(Mリーグ)。開始点(25,000点固定)やCPUの強さは変えられない。
 - 名前はアプリを閉じると消える(端末に保存しない)。総合成績表(試合履歴)と読みクイズの通算成績もセッション中だけ。
-- ソロ対局の中断からの復帰は、ネット対戦用の復帰ロビーを経由する。
+- ソロ対局の中断からの復帰は、ネット対戦用の復帰ロビーを経由する(ブラウザ版はロビーが無いので、ホーム画面の帯から直接復帰する)。
 - 観戦者は打牌・顔文字・「次へ」を使えない。ギャラリー(ホストの観戦)の指定は開始前のロビーだけ。
 
 **通信**
@@ -99,6 +99,8 @@ Flutter製、Android / iOS 対応、**横画面専用**。
 **配布**
 - アプリストアでは配布していない。各自でビルドして入れる前提(iOS は署名設定が必要)。
 - 横画面専用。
+- ブラウザ版は「ひとりで打つ」専用。牌譜閲覧・手動記録・自分の牌譜の保存・通信対戦(部屋を作る/入る)は無い
+  (ファイル保存と sqlite3 がブラウザで使えないため。中断・復帰とお気に入りは動く)。公開 URL での配信はしない。
 
 ## 実装ルール(Mリーグ準拠)
 
@@ -181,6 +183,7 @@ fvm flutter analyze
 fvm flutter run            # 実機/エミュレータで起動
 fvm flutter build apk      # Android
 fvm flutter build ios      # iOS(要署名設定)
+fvm flutter build web      # ブラウザ版(build/web/ を任意の静的 http サーバーで配信。ひとりで打つ専用)
 
 # 動作確認用の dart-define(いずれも任意)
 fvm flutter run --dart-define=AUTOSTART_SOLO=true   # ソロ対局を自動開始し、自席も自動でツモ切り進行(連戦も自動)
@@ -223,4 +226,8 @@ fvm flutter run --dart-define=AUTOSTART_SOLO=true   # ソロ対局を自動開�
 - Android: `INTERNET` / `ACCESS_WIFI_STATE` / `CHANGE_WIFI_MULTICAST_STATE` に加え、BLE 用に
   `BLUETOOTH_SCAN` / `BLUETOOTH_CONNECT` / `BLUETOOTH_ADVERTISE`(Android 12+)と旧版向けの
   `BLUETOOTH` / `BLUETOOTH_ADMIN` / `ACCESS_FINE_LOCATION` を設定済み。初回に「付近のデバイス」の許可を求めます
-- アプリアイコンの再生成: `assets/icon/` の素材を更新して `fvm dart run flutter_launcher_icons`(手順の注意は `pubspec.yaml` のコメント)
+- アプリアイコンの再生成: `assets/icon/` の素材を更新して `fvm dart run flutter_launcher_icons`(手順の注意は `pubspec.yaml` のコメント)。
+  ブラウザ版の favicon と PWA アイコン(`web/favicon.png`・`web/icons/`)は同じ素材を `sips` で縮小したもの(flutter_launcher_icons は使わない)
+- ブラウザ版の機能の出し分けは `lib/features.dart` の 2 つの定数(`localFiles`・`netPlay`)に集約。ストアの入口はこれを見て何もせず、
+  ホーム画面は入口を出さない。sqlite3(dart:ffi)だけはビルド時に `paifu_db.dart` の条件付き export で `paifu_db_stub.dart` に差し替わる
+  (両実装は `PaifuDbApi` インターフェースを implements しているので、片方にだけメソッドを足すと analyzer が赤くする)

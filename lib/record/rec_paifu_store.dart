@@ -12,6 +12,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 import '../paifu/own_paifu_format.dart';
+import '../features.dart';
 
 /// 一覧表示用の1試合の要約
 class RecPaifuSummary {
@@ -58,6 +59,7 @@ class RecPaifuStore {
   /// 1試合分を保存(全体上書き)。[game] は RecordEngine.buildGameJson の形。
   /// 保存失敗は記録の進行を止めない(false を返すだけ)。
   static Future<bool> save(String id, Map<String, dynamic> game) async {
+    if (!Features.localFiles) return false;
     try {
       final now = DateTime.now();
       String p2(int v) => v.toString().padLeft(2, '0');
@@ -80,6 +82,7 @@ class RecPaifuStore {
 
   /// 保存済みの一覧(新しい順)。壊れたファイルは読み飛ばす。
   static Future<List<RecPaifuSummary>> listGames() async {
+    if (!Features.localFiles) return const [];
     final dir = await _dir();
     if (!await dir.exists()) return const [];
     final summaries = <RecPaifuSummary>[];
@@ -114,6 +117,7 @@ class RecPaifuStore {
 
   /// 1試合の牌譜を読み込む(MyPaifuSource に渡す)。無ければ null。
   static Future<Map<String, dynamic>?> loadGame(String id) async {
+    if (!Features.localFiles) return null;
     try {
       final f = await _file(id);
       if (!await f.exists()) return null;
@@ -126,6 +130,7 @@ class RecPaifuStore {
   }
 
   static Future<void> deleteGame(String id) async {
+    if (!Features.localFiles) return;
     try {
       final f = await _file(id);
       if (await f.exists()) await f.delete();

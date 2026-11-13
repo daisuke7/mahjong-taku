@@ -15,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 import 'db_schema.dart';
 import 'paifu_db.dart';
 import 'paifu_update_check.dart';
+import '../features.dart';
 
 /// ダウンロード進捗。total が不明(-1)のこともある。
 /// stage が 'retry' のときは received=次に行う試行番号(1始まり)、total=最大試行回数。
@@ -81,7 +82,8 @@ class PaifuStore {
     }
   }
 
-  static Future<bool> exists() async => (await dbFile()).exists();
+  static Future<bool> exists() async =>
+      Features.localFiles && await (await dbFile()).exists();
 
   /// ダウンロード時のリリースタグを覚えておくファイル(更新確認の比較用)
   static Future<File> tagFile() async =>

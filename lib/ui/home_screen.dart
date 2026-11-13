@@ -2,7 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../engine/models.dart';
+import '../features.dart';
 import '../session/local_session.dart';
+import '../session/suspend.dart';
+import '../session/suspend_store.dart';
+import 'solo_resume.dart';
+import 'widgets/resume_banner.dart';
 import 'game_screen.dart';
 import 'host_lobby_screen.dart';
 import 'join_screen.dart';
@@ -25,6 +30,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final TextEditingController _nameController;
+
+  /// 中断したソロ対局(通信対戦の無いビルドだけ。あるビルドでは「部屋を作る」のロビーが出す)
+  SuspendedHostGame? _saved;
 
   /// 動作確認用: --dart-define=AUTOSTART_SOLO=true でソロ対局を自動開始
   static const bool _autostartSolo = bool.fromEnvironment('AUTOSTART_SOLO');
@@ -53,7 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _nameController = TextEditingController(text: PlayerPrefs.name);
     // 牌譜DBの更新有無を起動後1回だけ確認(DBなし・オフラインなら何もしない)
-    unawaited(PaifuUpdateCheck.runOnce());
+    if (Features.localFiles) unawaited(PaifuUpdateCheck.runOnce());
+    if (!Features.netPlay) {
+      SuspendStore.loadHost().then((saved) {
+        if (mounted && saved != null) setState(() => _saved = saved);
+      });
+    }
     if (_autostartSolo) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startSolo());
     }
@@ -182,9 +195,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Wi-Fi・近距離・Bluetooth でつながる四人打ちリーチ麻雀(Mリーグルール)',
-                      style: TextStyle(color: Colors.white54),
+                    Text(
+                      Features.netPlay
+                          ? 'Wi-Fi・近距離・Bluetooth でつながる四人打ちリーチ麻雀(Mリーグルール)'
+                          : 'ブラウザ版: CPU3人と打つ四人打ちリーチ麻雀(Mリーグルール)',
+                      style: const TextStyle(color: Colors.white54),
                     ),
                     const SizedBox(height: 2),
                     const Text(
@@ -206,6 +221,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    if (!Features.netPlay && _saved != null)
+                      SizedBox(
+                        width: 560,
+                        child: ResumeBanner(
+                          saved: _saved!,
+                          onResume: () => resumeSoloGame(context, _saved!),
+                          onDiscard: () async {
+                            await SuspendStore.clearHost();
+                            if (mounted) setState(() => _saved = null);
+                          },
+                        ),
+                      ),
                     Wrap(
                       spacing: 14,
                       runSpacing: 10,
@@ -217,36 +244,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           subtitle: 'CPU3人と対局',
                           onTap: _startSolo,
                         ),
-                        _menuButton(
-                          icon: Icons.wifi_tethering,
-                          label: '部屋を作る',
-                          subtitle: 'この端末がホストになる',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => HostLobbyScreen(
-                                  hostName: _playerName,
-                                  config: _config,
+                        if (Features.netPlay)
+                          _menuButton(
+                            icon: Icons.wifi_tethering,
+                            label: '部屋を作る',
+                            subtitle: 'この端末がホストになる',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => HostLobbyScreen(
+                                    hostName: _playerName,
+                                    config: _config,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                        _menuButton(
-                          icon: Icons.search,
-                          label: '部屋に入る',
-                          subtitle: '近くの部屋を探す',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    JoinScreen(playerName: _playerName),
-                              ),
-                            );
-                          },
-                        ),
+                              );
+                            },
+                          ),
+                        if (Features.netPlay)
+                          _menuButton(
+                            icon: Icons.search,
+                            label: '部屋に入る',
+                            subtitle: '近くの部屋を探す',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      JoinScreen(playerName: _playerName),
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ],
@@ -260,19 +289,20 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.history_edu,
-                      color: Color(0xFFFFD54F),
-                    ),
-                    tooltip: '牌譜閲覧モードへ',
-                    onPressed: () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const PaifuHomeScreen(),
+                  if (Features.localFiles)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.history_edu,
+                        color: Color(0xFFFFD54F),
+                      ),
+                      tooltip: '牌譜閲覧モードへ',
+                      onPressed: () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PaifuHomeScreen(),
+                        ),
                       ),
                     ),
-                  ),
                   IconButton(
                     icon: const Icon(Icons.menu_book, color: Color(0xFFFFD54F)),
                     tooltip: '早見表',

@@ -53,7 +53,7 @@ Flutter製4人打ちリーチ麻雀(Mリーグルール・横画面)。対戦(Ga
 | 現物・スジなどの安全度 | `engine/safety.dart` |
 | 牌譜DB表記・鳴きブロック規約(鳴いた牌の位置 `calledTilePosition`、卓の副露表示も使う)・和了 description(`agariDescription`/`limitLabelFromDescription`) | `engine/paifu_record.dart` |
 | 表示文言(局「東1局/南3局1本場」`kyokuLabel`・風「東家」`seatWindName`・符号付き点差 `formatSignedPoints`・翻符 `hanFuLabel`・和了要約 `winSummary`・流局要約 `tenpaiSummary`・CPU名 `cpuPlayerNames`) | `engine/display_text.dart` |
-| 試合ラベル(「第1試合(A卓)」`matchLabelOf`・卓名 `tableLetterOf`・複数卓判定 `hasMultipleTables`/`multiTableDates`) | `paifu/paifu_db.dart` |
+| 試合ラベル(「第1試合(A卓)」`matchLabelOf`・卓名 `tableLetterOf`)・複数卓判定(`PaifuDb.hasMultipleTables`/`multiTableDates`) | `paifu/paifu_db.dart`(データ型・純粋関数)/ `paifu/paifu_db_native.dart`(`PaifuDb` の sqlite 実装。Web は `paifu_db_stub.dart`) |
 | 牌の表示名(「赤5萬」「東」`Tile.displayName`)・ドラ種集合 `Tile.doraKinds` | `engine/tile.dart` |
 | 自風(席と親から `seatWindOf`) | `engine/models.dart` |
 | 河の表示規則(鳴かれた牌非表示・宣言牌横向きの移送 `riverDisplayPlan`) | `ui/widgets/table_widgets.dart` |

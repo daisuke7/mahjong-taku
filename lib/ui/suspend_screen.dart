@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../features.dart';
 import '../session/suspend.dart';
 import 'host_lobby_screen.dart';
+import 'solo_resume.dart';
 
 /// 対局中断後の画面。
 /// 全員に「中断した」ことを示し、ホストにだけ復帰ボタンを出す。
 /// ゲストはホーム画面の「部屋に入る」から復帰できる。
+/// 通信対戦の無いビルドではロビーを経由せず [resumeSoloGame] で直接再開する。
 class SuspendScreen extends StatelessWidget {
   /// ホストの場合は保存済みの復帰情報(ゲストは null)
   final SuspendedHostGame? hostGame;
@@ -57,6 +60,11 @@ class SuspendScreen extends StatelessWidget {
                   icon: const Icon(Icons.play_arrow),
                   label: const Text('復帰する'),
                   onPressed: () {
+                    if (!Features.netPlay) {
+                      // サーバーを立てられないビルドは復帰ロビーを経由しない
+                      resumeSoloGame(context, hostGame!, replace: true);
+                      return;
+                    }
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

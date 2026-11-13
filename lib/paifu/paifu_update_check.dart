@@ -17,6 +17,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import 'paifu_store.dart';
+import '../features.dart';
 
 /// リダイレクト先URLからリリースタグを取り出す(純粋関数)。
 /// 例: `.../releases/download/20260915-2050-1e8b74ea/database.zip` → `20260915-2050-1e8b74ea`
@@ -44,7 +45,7 @@ class PaifuUpdateCheck {
     Future<String?> Function()? savedTag,
     Future<String?> Function()? rejectedTag,
   }) async {
-    if (_done) return;
+    if (_done || !Features.localFiles) return;
     _done = true;
     try {
       if (!await (hasDb ?? PaifuStore.exists)()) return; // インストール直後
